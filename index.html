@@ -1,156 +1,721 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PilotAI</title>
 <style>
-:root{color-scheme:dark;--bg:#070b09;--panel:#0b110e;--surface:#131b17;--line:#1f2b25;--text:#e6efe9;--muted:#84968b;--green:#3ddc84;--deep:#14452b;
---serif:"Iowan Old Style",Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root {
+  color-scheme: dark;
+  --bg:#070b09;
+  --panel:#0b110e;
+  --surface:#131b17;
+  --line:#1f2b25;
+  --text:#e6efe9;
+  --muted:#84968b;
+  --green:#3ddc84;
+  --deep:#14452b;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+}
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:15px/1.6 var(--sans)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.6 var(--sans)}
 button,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--green);outline-offset:2px}
-#app{display:flex;height:100%}
-aside{width:272px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:6px;flex:none}
-.brand{display:flex;align-items:center;gap:10px;font:600 22px var(--serif);padding:4px 8px 14px}
-.brand svg{width:26px;height:26px}
-.btn{background:none;border:0;border-radius:10px;padding:9px 10px;text-align:left;color:var(--text);width:100%}
+#app{display:flex;height:100dvh;overflow:hidden}
+aside{
+  width:270px;background:var(--panel);
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+  padding:16px 12px;gap:7px;flex:none
+}
+.brand{
+  display:flex;align-items:center;gap:11px;
+  font:600 23px var(--serif);
+  padding:4px 8px 16px
+}
+.brand svg{width:30px;height:30px}
+.btn{
+  background:none;border:0;border-radius:10px;
+  padding:10px;text-align:left;color:var(--text);
+  width:100%
+}
 .btn:hover{background:var(--surface)}
-.new{background:var(--deep);color:var(--green);font-weight:600}
+.new{background:var(--deep);color:var(--green);font-weight:650}
 .new:hover{background:#1a5636}
-#list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:2px;margin-top:8px}
-#list .btn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+#list{
+  flex:1;overflow:auto;display:flex;
+  flex-direction:column;gap:3px;margin-top:8px
+}
+#list .btn{
+  white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;color:var(--muted)
+}
 #list .on{background:var(--surface);color:var(--text)}
-.stat{color:var(--muted);font-size:13px;padding:8px 10px}
+.stat{color:var(--muted);font-size:12px;padding:8px 10px}
+.side-note{
+  color:var(--muted);font-size:11px;
+  padding:4px 10px 0
+}
 main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
-#menu{display:none;position:absolute;top:10px;left:10px;z-index:3;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 12px}
-#log{flex:1;overflow:auto;padding:28px 20px 12px}
-.col{max-width:740px;margin:0 auto}
-.hero{text-align:center;margin-top:16vh}
-.hero svg{width:44px;height:44px}
-.hero h1{font:500 36px/1.2 var(--serif);margin:14px 0 6px}
+#menu{
+  display:none;position:absolute;top:10px;left:10px;z-index:3;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:7px 12px
+}
+#log{flex:1;overflow:auto;padding:28px 20px 12px;scroll-behavior:smooth}
+.col{max-width:760px;margin:0 auto}
+.hero{text-align:center;margin-top:15vh}
+.hero svg{width:58px;height:58px;filter:drop-shadow(0 0 15px #3ddc8440)}
+.hero h1{font:500 38px/1.2 var(--serif);margin:16px 0 7px}
 .hero p{color:var(--muted);margin:0}
-.msg{margin:0 0 22px}
-.me{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 16px;width:fit-content;max-width:85%;margin-left:auto;white-space:pre-wrap}
-.bot{display:flex;gap:12px;font:17px/1.75 var(--serif)}
-.bot svg{width:22px;height:22px;flex:none;margin-top:5px}
-.bot div{max-width:66ch}
+.hero .hint{font-size:13px;margin-top:24px}
+.msg{margin:0 0 25px}
+.me{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:10px 16px;
+  width:fit-content;max-width:88%;margin-left:auto;
+  white-space:pre-wrap;overflow-wrap:anywhere
+}
+.bot{display:flex;gap:13px;font:17px/1.75 var(--serif)}
+.bot svg{width:27px;height:27px;flex:none;margin-top:5px}
+.bot-content{max-width:68ch;min-width:0;overflow-wrap:anywhere}
+.bot-content p{margin:0 0 9px}
+.bot-content a{color:var(--green);text-decoration:none}
+.bot-content a:hover{text-decoration:underline}
+.source{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);border-radius:10px;
+  padding:7px 11px;margin-top:12px;
+  font:13px var(--sans);color:var(--green);
+  background:#0c1711
+}
+.source:hover{background:var(--surface)}
+.typing{color:var(--muted);font:14px var(--sans)}
 #bar{padding:6px 20px 18px}
-#box{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:10px 10px 10px 18px;display:flex;align-items:flex-end;gap:10px;transition:border-color .15s}
+#box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:22px;padding:10px 10px 10px 18px;
+  display:flex;align-items:flex-end;gap:10px;
+  transition:border-color .15s
+}
 #box:focus-within{border-color:var(--green)}
-textarea{flex:1;background:none;border:0;resize:none;outline:0;max-height:160px;min-height:28px;padding:4px 0}
-#go{width:36px;height:36px;border-radius:50%;border:0;background:var(--green);color:#04110a;display:grid;place-items:center;flex:none}
+#in{
+  flex:1;background:none;border:0;resize:none;outline:0;
+  max-height:160px;min-height:28px;padding:4px 0;
+  color:var(--text)
+}
+#in::placeholder{color:#65766b}
+#go{
+  width:38px;height:38px;border-radius:50%;
+  border:0;background:var(--green);color:#04110a;
+  display:grid;place-items:center;flex:none
+}
 #go:disabled{opacity:.35;cursor:default}
-.note{text-align:center;color:var(--muted);font-size:12.5px;margin:8px 0 0}
-dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:18px;padding:22px;width:min(560px,92vw)}
-dialog::backdrop{background:rgba(0,0,0,.7)}
-dialog h2{font:500 24px var(--serif);margin:0 0 6px}
-dialog p{color:var(--muted);margin:0 0 12px}
-dialog textarea{width:100%;height:180px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
-.row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.note{text-align:center;color:var(--muted);font-size:11px;margin:8px 0 0}
+#status{min-height:18px;text-align:center;color:var(--green);font-size:12px;margin-top:5px}
+dialog{
+  background:var(--panel);color:var(--text);
+  border:1px solid var(--line);border-radius:18px;
+  padding:22px;width:min(560px,92vw)
+}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+dialog h2{font:500 25px var(--serif);margin:0 0 5px}
+dialog p{color:var(--muted);margin:0 0 14px;font-size:14px}
+dialog textarea{
+  width:100%;height:180px;resize:vertical;
+  background:var(--bg);border:1px solid var(--line);
+  border-radius:12px;padding:12px;color:var(--text)
+}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
 .row .btn{width:auto;border:1px solid var(--line)}
 .row .new{border-color:transparent}
-@media(max-width:760px){aside{position:fixed;inset:0 auto 0 0;z-index:4;transform:translateX(-100%);transition:transform .2s;padding-top:calc(16px + env(safe-area-inset-top,0px))}
-aside.open{transform:none}#menu{display:block}.hero{margin-top:12vh}.hero h1{font-size:30px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+#clear{color:#e99b9b}
+@media(max-width:760px){
+  aside{
+    position:fixed;inset:0 auto 0 0;z-index:4;
+    transform:translateX(-100%);
+    transition:transform .2s;
+    padding-top:calc(16px + env(safe-area-inset-top,0px))
+  }
+  aside.open{transform:none}
+  #menu{display:block}
+  #log{padding-top:55px}
+  .hero{margin-top:10vh}
+  .hero h1{font-size:31px}
+  #bar{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div id="app">
-<aside id="side">
-  <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg>PilotAI</div>
-  <button class="btn new" id="new">New chat</button>
-  <div id="list"></div>
-  <div class="stat" id="stat"></div>
-  <button class="btn" id="teach">Train PilotAI</button>
-</aside>
-<main>
-  <button id="menu" aria-label="Open sidebar">Menu</button>
-  <div id="log"><div class="col" id="col"></div></div>
-  <div id="bar"><div class="col">
-    <div id="box"><textarea id="in" rows="1" placeholder="Ask PilotAI anything"></textarea>
-    <button id="go" aria-label="Send" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
-    <p class="note">PilotAI is a small model that runs entirely in your browser. No API keys, no servers.</p>
-  </div></div>
-</main>
+  <aside id="side">
+    <div class="brand">
+      <svg viewBox="0 0 100 100" fill="#3ddc84">
+        <path d="M50 3 L60 39 L94 57 L94 66 L60 56 L60 84 L74 93 L74 98 L50 92 L26 98 L26 93 L40 84 L40 56 L6 66 L6 57 L40 39 Z"/>
+      </svg>
+      PilotAI
+    </div>
+
+    <button class="btn new" id="new">+ New chat</button>
+    <div id="list"></div>
+    <div class="stat" id="stat"></div>
+    <button class="btn" id="teach">Train PilotAI</button>
+    <div class="side-note">Your chats and training stay in this browser.</div>
+  </aside>
+
+  <main>
+    <button id="menu">Menu</button>
+    <div id="log">
+      <div class="col" id="col"></div>
+    </div>
+    <div id="bar">
+      <div class="col">
+        <div id="box">
+          <textarea id="in" rows="1" placeholder="Ask PilotAI or look something up..."></textarea>
+          <button id="go" aria-label="Send" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div id="status"></div>
+        <p class="note">PilotAI · Browser-based · No backend · No API keys</p>
+      </div>
+    </div>
+  </main>
 </div>
+
 <dialog id="dlg">
   <h2>Train PilotAI</h2>
-  <p>Paste your own writing, notes or facts. PilotAI learns the words and phrasing and uses them in its answers.</p>
-  <textarea id="txt" placeholder="Paste text here…"></textarea>
-  <div class="row"><button class="btn" id="reset">Forget my training</button><button class="btn" id="close">Close</button><button class="btn new" id="learn">Train model</button></div>
+  <p>
+    Give PilotAI information to use when answering.
+    Paste notes, coding examples, instructions, or your own writing.
+    Training is saved in this browser.
+  </p>
+  <textarea id="txt" placeholder="Teach PilotAI something..."></textarea>
+  <div class="row">
+    <button class="btn" id="reset">Clear training</button>
+    <button class="btn" id="close">Close</button>
+    <button class="btn new" id="learn">Save training</button>
+  </div>
 </dialog>
+
 <script>
-const $=s=>document.querySelector(s);
-const STAR='<svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg>';
-/* ---- PilotAI core: a word-level trigram language model with retrieval-guided decoding ---- */
-const BASE=`Hello, pilot. I am PilotAI, a small language model that lives entirely in your browser. I was built from scratch, so I do not call any outside service or use anyone else’s API key. Everything I know comes from the text I was trained on, and you can train me on your own writing at any time. When you ask a question, I look for the sentences closest to your words and then continue them one word at a time. Each next word is chosen from the patterns I have seen, which is the same basic idea behind larger language models. My memory is small, so I work best on short, focused questions. I can help you plan a project, outline an idea, or practice putting thoughts into clear sentences. A good plan starts with one goal, a short list of steps, and a date for the first step. To write better, say one idea per sentence and cut every word that does not carry meaning. When you feel stuck, break the problem into smaller parts and finish the smallest part first. Good code is easy to read, easy to test, and easy to change later. If you want me to know more, open the training panel and paste in your notes, articles or stories. Your training stays on this device and is never sent anywhere. Privacy matters, so I keep your chats in your own browser storage. I can be wrong, and I do not understand the world the way a person does. Treat my answers as a starting point and check anything important. Ask me to brainstorm names, outline a talk, or suggest a first step. Learning something new works best in small daily sessions with one clear target. A strong idea is one you can explain in two sentences to a friend. Thanks for flying with me, and tell me where you want to go next.`;
-let extra='',chats=[],cur=null,sents=[],tri={},bi={},df={};
-try{extra=localStorage.getItem('pilot-extra')||'';chats=JSON.parse(localStorage.getItem('pilot-chats')||'[]')}catch(e){}
-const tok=s=>s.toLowerCase().replace(/'/g,'’').match(/[a-z0-9’-]+|[.,!?]/g)||[];
-function build(){
-  sents=(BASE+'\n'+extra).split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.split(/\s+/).length>3);
-  tri={};bi={};df={};
-  sents.forEach(s=>{const t=['<s>','<s>',...tok(s),'</s>'];
-    new Set(t).forEach(w=>df[w]=(df[w]||0)+1);
-    for(let i=2;i<t.length;i++){(tri[t[i-2]+' '+t[i-1]]??=[]).push(t[i]);(bi[t[i-1]]??=[]).push(t[i])}});
-  $('#stat').textContent=Object.keys(df).length+' words learned from '+sents.length+' sentences';
+const $ = s => document.querySelector(s);
+
+const JET = `
+<svg viewBox="0 0 100 100" fill="#3ddc84" aria-hidden="true">
+<path d="M50 3 L60 39 L94 57 L94 66 L60 56 L60 84 L74 93 L74 98 L50 92 L26 98 L26 93 L40 84 L40 56 L6 66 L6 57 L40 39 Z"/>
+</svg>`;
+
+const BASE = `
+You are PilotAI, a coding-focused assistant.
+You help with programming, debugging, software design, and technical projects.
+Be direct, helpful, curious, and conversational.
+Answer the actual question. Do not repeat unrelated training text.
+Do not pretend to have performed actions you have not performed.
+If you do not know something, say so.
+Explain code clearly and give complete working examples when appropriate.
+When a user reports a bug, help identify and fix the actual cause.
+When a user asks for code, prioritize usable code over long explanations.
+You can help with HTML, CSS, JavaScript, Python, Lua, C++, Arduino, and other languages.
+You are called PilotAI.
+`;
+
+let extra = "";
+let chats = [];
+let cur = null;
+let busy = false;
+
+try {
+  extra = localStorage.getItem("pilot-extra") || "";
+  chats = JSON.parse(localStorage.getItem("pilot-chats") || "[]");
+  if (!Array.isArray(chats)) chats = [];
+} catch(e) {
+  extra = "";
+  chats = [];
 }
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-function reply(q){
-  const qs=new Set(tok(q)),N=sents.length;
-  const score=s=>tok(s).reduce((n,w)=>n+(qs.has(w)&&/\w/.test(w)?Math.log(N/(df[w]||1)):0),0)+Math.random()*.4;
-  const ranked=sents.map(s=>[score(s),s]).sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
-  const out=[];
-  for(let k=0;k<3&&out.length<48;k++){
-    const t=tok(ranked[k]);let a='<s>',b=t[0];const w=[b];
-    for(let i=0;i<26;i++){
-      let c=tri[a+' '+b]||bi[b];if(!c)break;
-      let n=pick(c);for(let j=0;j<3&&!qs.has(n);j++){const m=pick(c);if(qs.has(m)){n=m;break}}
-      if(n==='</s>')break;w.push(n);a=b;b=n;
-    }
-    out.push(...w,'.');
-    if(k===0&&out.length>16)break;
+
+/* -------------------------
+   JET LOGO AND CHAT DISPLAY
+------------------------- */
+
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function save() {
+  try {
+    localStorage.setItem("pilot-chats", JSON.stringify(chats.slice(0,40)));
+  } catch(e) {}
+}
+
+function view() {
+  const c = chats.find(x => x.id === cur);
+  const col = $("#col");
+
+  $("#list").innerHTML = chats.map(x =>
+    `<button class="btn ${x.id === cur ? "on" : ""}" data-id="${x.id}">${esc(x.title)}</button>`
+  ).join("");
+
+  if (!c || !c.msgs.length) {
+    col.innerHTML = `
+      <div class="hero">
+        ${JET}
+        <h1>Ready for takeoff?</h1>
+        <p>What are we working on today?</p>
+        <p class="hint">Ask a coding question, solve a problem, or look something up.</p>
+      </div>`;
+  } else {
+    col.innerHTML = c.msgs.map(m => {
+      if (m.r === "u") {
+        return `<div class="msg"><div class="me">${esc(m.t)}</div></div>`;
+      }
+
+      return `
+        <div class="msg bot">
+          ${JET}
+          <div class="bot-content">
+            <p>${esc(m.t).replace(/\n/g,"<br>")}</p>
+            ${m.link ? `<a class="source" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">Open source ↗</a>` : ""}
+            ${m.searchLink ? `<a class="source" href="${esc(m.searchLink)}" target="_blank" rel="noopener noreferrer">Search the web ↗</a>` : ""}
+          </div>
+        </div>`;
+    }).join("");
   }
-  let s=out.join(' ').replace(/ ([.,!?])/g,'$1').replace(/([.!?])\1+/g,'$1').replace(/([.!?,])\s*\./g,'$1').replace(/\bi\b/g,'I').replace(/\bpilotai\b/gi,'PilotAI');
-  return s.replace(/(^|[.!?]\s+)([a-z])/g,(m,p,c)=>p+c.toUpperCase());
+
+  $("#log").scrollTop = $("#log").scrollHeight;
 }
-/* ---- Chat UI ---- */
-const save=()=>{try{localStorage.setItem('pilot-chats',JSON.stringify(chats.slice(0,40)))}catch(e){}};
-function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
-function view(){
-  const c=chats.find(x=>x.id===cur),col=$('#col');
-  $('#list').innerHTML=chats.map(x=>`<button class="btn ${x.id===cur?'on':''}" data-id="${x.id}">${esc(x.title)}</button>`).join('');
-  if(!c||!c.msgs.length){const h=new Date().getHours();
-    col.innerHTML=`<div class="hero">${STAR}<h1>${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, pilot</h1><p>What are we working on today?</p></div>`;return}
-  col.innerHTML=c.msgs.map(m=>m.r==='u'?`<div class="msg"><div class="me">${esc(m.t)}</div></div>`:`<div class="msg bot">${STAR}<div>${esc(m.t)}</div></div>`).join('');
-  $('#log').scrollTop=1e9;
+
+function newChat() {
+  cur = null;
+  $("#side").classList.remove("open");
+  $("#status").textContent = "";
+  view();
+  $("#in").focus();
 }
-function newChat(){cur=null;$('#side').classList.remove('open');view();$('#in').focus()}
-async function send(){
-  const i=$('#in'),q=i.value.trim();if(!q)return;
-  let c=chats.find(x=>x.id===cur);
-  if(!c){c={id:Date.now(),title:q.slice(0,40),msgs:[]};chats.unshift(c);cur=c.id}
-  c.msgs.push({r:'u',t:q});i.value='';i.style.height='';$('#go').disabled=true;view();
-  const a=reply(q),m={r:'a',t:''};c.msgs.push(m);view();
-  const words=a.split(' ');
-  for(const w of words){m.t+=(m.t?' ':'')+w;const el=$('#col').lastElementChild.lastElementChild;if(el)el.textContent=m.t;$('#log').scrollTop=1e9;await new Promise(r=>setTimeout(r,28))}
-  save();view();
+
+/* -------------------------
+   MATH ENGINE
+   No eval() is used.
+------------------------- */
+
+function calculate(expression) {
+  const s = expression
+    .replace(/[×]/g,"*")
+    .replace(/[÷]/g,"/")
+    .replace(/[−]/g,"-")
+    .replace(/\bplus\b/gi,"+")
+    .replace(/\bminus\b/gi,"-")
+    .replace(/\btimes\b/gi,"*")
+    .replace(/\bdivided by\b/gi,"/");
+
+  const tokens = s.match(/\d+(?:\.\d+)?|[()+\-*/%^]/g);
+  if (!tokens || tokens.join("") !== s.replace(/\s/g,"")) return null;
+
+  let i = 0;
+
+  function primary() {
+    if (tokens[i] === "+") {
+      i++;
+      return primary();
+    }
+    if (tokens[i] === "-") {
+      i++;
+      return -primary();
+    }
+    if (tokens[i] === "(") {
+      i++;
+      const v = addSub();
+      if (tokens[i] !== ")") throw Error("Missing closing parenthesis");
+      i++;
+      return v;
+    }
+    const t = tokens[i++];
+    if (!t || !/^\d/.test(t)) throw Error("Expected a number");
+    return Number(t);
+  }
+
+  function power() {
+    let v = primary();
+    if (tokens[i] === "^") {
+      i++;
+      v = Math.pow(v, power());
+    }
+    return v;
+  }
+
+  function mulDiv() {
+    let v = power();
+    while (["*","/","%"].includes(tokens[i])) {
+      const op = tokens[i++];
+      const b = power();
+      if ((op === "/" || op === "%") && b === 0) {
+        throw Error("Cannot divide by zero");
+      }
+      if (op === "*") v *= b;
+      if (op === "/") v /= b;
+      if (op === "%") v %= b;
+    }
+    return v;
+  }
+
+  function addSub() {
+    let v = mulDiv();
+    while (tokens[i] === "+" || tokens[i] === "-") {
+      const op = tokens[i++];
+      const b = mulDiv();
+      v = op === "+" ? v + b : v - b;
+    }
+    return v;
+  }
+
+  try {
+    const result = addSub();
+    if (i !== tokens.length || !Number.isFinite(result)) return null;
+    return Number(result.toPrecision(12)).toString();
+  } catch(e) {
+    return null;
+  }
 }
-$('#in').addEventListener('input',e=>{const t=e.target;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,160)+'px';$('#go').disabled=!t.value.trim()});
-$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-$('#go').onclick=send;$('#new').onclick=newChat;
-$('#list').onclick=e=>{const b=e.target.closest('[data-id]');if(b){cur=+b.dataset.id;$('#side').classList.remove('open');view()}};
-$('#menu').onclick=()=>$('#side').classList.toggle('open');
-$('#teach').onclick=()=>$('#dlg').showModal();
-$('#close').onclick=()=>$('#dlg').close();
-$('#learn').onclick=()=>{const t=$('#txt').value.trim();if(!t)return;extra+=(extra?'\n':'')+t;try{localStorage.setItem('pilot-extra',extra)}catch(e){}build();$('#txt').value='';$('#dlg').close()};
-$('#reset').onclick=()=>{extra='';try{localStorage.removeItem('pilot-extra')}catch(e){}build();$('#dlg').close()};
-build();view();
+
+function mathReply(q) {
+  let s = q.trim()
+    .replace(/^what is\s+/i,"")
+    .replace(/^calculate\s+/i,"")
+    .replace(/^solve\s+/i,"")
+    .replace(/[?=]$/,"")
+    .trim();
+
+  if (!/[0-9]/.test(s)) return null;
+  if (!/[+\-*/×÷%^]/.test(s) &&
+      !/\b(plus|minus|times|divided by)\b/i.test(s)) return null;
+
+  const result = calculate(s);
+  if (result === null) return null;
+  return `${s} = ${result}`;
+}
+
+/* -------------------------
+   INTERNET LOOKUP
+   Uses the public Wikipedia API.
+   No API key required.
+------------------------- */
+
+function wantsLookup(q) {
+  const s = q.trim().toLowerCase();
+
+  return /^(look up|lookup|search for|search|google|find information about|research|who is|what is|where is|when did|when was|why does|how does|tell me about|explain)\b/.test(s);
+}
+
+function lookupQuery(q) {
+  return q.trim()
+    .replace(/^(look up|lookup|search for|search|google|find information about|research|who is|what is|where is|when did|when was|why does|how does|tell me about|explain)\s*/i,"")
+    .replace(/[?]+$/,"")
+    .trim();
+}
+
+async function lookupWikipedia(query) {
+  if (!query) {
+    return {text:"What would you like me to look up?"};
+  }
+
+  const searchURL =
+    "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+    encodeURIComponent(query) +
+    "&limit=5&namespace=0&format=json&origin=*";
+
+  const response = await fetch(searchURL);
+  if (!response.ok) throw Error("Search request failed");
+
+  const data = await response.json();
+  const titles = data[1] || [];
+
+  if (!titles.length) {
+    return {
+      text:`I couldn't find a Wikipedia article for "${query}". Try the web search link for more results.`,
+      searchLink:"https://duckduckgo.com/?q=" + encodeURIComponent(query)
+    };
+  }
+
+  for (const title of titles.slice(0,3)) {
+    try {
+      const summaryURL =
+        "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+        encodeURIComponent(title);
+
+      const pageResponse = await fetch(summaryURL, {
+        headers: {"Accept":"application/json"}
+      });
+
+      if (!pageResponse.ok) continue;
+
+      const page = await pageResponse.json();
+      if (!page.extract) continue;
+
+      return {
+        text:`${page.title}\n\n${page.extract}`,
+        link:page.content_urls?.desktop?.page ||
+          "https://en.wikipedia.org/wiki/" + encodeURIComponent(title),
+        searchLink:"https://duckduckgo.com/?q=" + encodeURIComponent(query)
+      };
+    } catch(e) {}
+  }
+
+  return {
+    text:`I couldn't retrieve the article summary for "${query}". You can still search the web.`,
+    searchLink:"https://duckduckgo.com/?q=" + encodeURIComponent(query)
+  };
+}
+
+/* -------------------------
+   BASIC CHAT RESPONSES
+------------------------- */
+
+function basicReply(q, history) {
+  const s = q.toLowerCase().trim();
+
+  if (/^(hi|hello|hey|yo)\b/.test(s)) {
+    return "Hey! PilotAI is ready. What are we building?";
+  }
+
+  if (/^(what is your name|who are you)\??$/.test(s)) {
+    return "I'm PilotAI, your coding-focused assistant.";
+  }
+
+  if (/^what can you do\??$/.test(s)) {
+    return "I can help with coding, debugging, project planning, math, and looking up information online. Try asking me to look up a topic!";
+  }
+
+  if (/^(help|help me)\??$/.test(s)) {
+    return "I'm here. Tell me what you're trying to build or what isn't working, and we'll figure it out.";
+  }
+
+  if (/you don't listen|you do not listen|not listening/i.test(s)) {
+    return "You're right. I should answer your actual question instead of repeating unrelated information. What do you need?";
+  }
+
+  if (/what is 1\s*\+\s*1/.test(s)) return "1 + 1 = 2.";
+  if (/what is 2\s*\+\s*2/.test(s)) return "2 + 2 = 4.";
+
+  if (history.length > 0) {
+    return "I can use the messages in this chat as context, but I don't have a full reasoning model running locally yet. You can ask me to look up information or teach me something using the Train PilotAI button.";
+  }
+
+  return null;
+}
+
+/* -------------------------
+   TRAINING RETRIEVAL
+   Retrieves relevant sentences
+   from the user's saved notes.
+------------------------- */
+
+function getTrainingAnswer(q) {
+  if (!extra.trim()) return null;
+
+  const words = q.toLowerCase().match(/[a-z0-9_]+/g) || [];
+  const useful = words.filter(w => w.length > 2);
+
+  if (!useful.length) return null;
+
+  const sentences = extra
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  const ranked = sentences.map(sentence => {
+    const text = sentence.toLowerCase();
+    let score = 0;
+
+    for (const word of useful) {
+      if (text.includes(word)) score += word.length > 5 ? 2 : 1;
+    }
+
+    return {sentence,score};
+  }).sort((a,b) => b.score - a.score);
+
+  if (!ranked.length || ranked[0].score === 0) return null;
+
+  return ranked.slice(0,3)
+    .filter(x => x.score > 0)
+    .map(x => x.sentence)
+    .join("\n\n");
+}
+
+/* -------------------------
+   RESPONSE ROUTER
+------------------------- */
+
+async function reply(q, history) {
+  const math = mathReply(q);
+  if (math !== null) return {text:math};
+
+  const basic = basicReply(q, history);
+  if (basic !== null) return {text:basic};
+
+  if (wantsLookup(q)) {
+    const query = lookupQuery(q);
+    try {
+      return await lookupWikipedia(query);
+    } catch(e) {
+      return {
+        text:"I couldn't connect to the lookup service. Check your internet connection, or use the web search link.",
+        searchLink:"https://duckduckgo.com/?q=" + encodeURIComponent(query)
+      };
+    }
+  }
+
+  const trained = getTrainingAnswer(q);
+  if (trained) {
+    return {
+      text:"I found this in your training:\n\n" + trained
+    };
+  }
+
+  return {
+    text:"I don't know the answer to that yet. Try asking me to look it up, or teach me the topic using the Train PilotAI button."
+  };
+}
+
+/* -------------------------
+   SEND MESSAGE
+------------------------- */
+
+async function send() {
+  if (busy) return;
+
+  const input = $("#in");
+  const q = input.value.trim();
+  if (!q) return;
+
+  let c = chats.find(x => x.id === cur);
+
+  if (!c) {
+    c = {
+      id:Date.now(),
+      title:q.slice(0,40),
+      msgs:[]
+    };
+    chats.unshift(c);
+    cur = c.id;
+  }
+
+  const previousMessages = c.msgs.slice(-12);
+
+  c.msgs.push({r:"u",t:q});
+  input.value = "";
+  input.style.height = "";
+  $("#go").disabled = true;
+
+  busy = true;
+  $("#status").textContent = wantsLookup(q) ? "Looking that up..." : "Thinking...";
+  view();
+
+  const message = {r:"a",t:""};
+  c.msgs.push(message);
+  view();
+
+  try {
+    const result = await reply(q, previousMessages);
+    message.t = result.text || "I couldn't create an answer.";
+    message.link = result.link || null;
+    message.searchLink = result.searchLink || null;
+  } catch(e) {
+    message.t = "Something went wrong while answering. Please try again.";
+  }
+
+  busy = false;
+  $("#status").textContent = "";
+  $("#go").disabled = !$("#in").value.trim();
+
+  save();
+  view();
+}
+
+/* -------------------------
+   EVENTS
+------------------------- */
+
+$("#in").addEventListener("input",e => {
+  const t = e.target;
+  t.style.height = "auto";
+  t.style.height = Math.min(t.scrollHeight,160) + "px";
+  $("#go").disabled = !t.value.trim() || busy;
+});
+
+$("#in").addEventListener("keydown",e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+});
+
+$("#go").onclick = send;
+$("#new").onclick = newChat;
+
+$("#list").onclick = e => {
+  const b = e.target.closest("[data-id]");
+  if (!b) return;
+  cur = Number(b.dataset.id);
+  $("#side").classList.remove("open");
+  view();
+};
+
+$("#menu").onclick = () => {
+  $("#side").classList.toggle("open");
+};
+
+$("#teach").onclick = () => $("#dlg").showModal();
+$("#close").onclick = () => $("#dlg").close();
+
+$("#learn").onclick = () => {
+  const t = $("#txt").value.trim();
+  if (!t) return;
+
+  extra += (extra ? "\n" : "") + t;
+
+  try {
+    localStorage.setItem("pilot-extra",extra);
+  } catch(e) {}
+
+  $("#txt").value = "";
+  $("#dlg").close();
+  $("#stat").textContent = extra.length.toLocaleString() + " training characters saved";
+};
+
+$("#reset").onclick = () => {
+  if (!confirm("Clear all of PilotAI's custom training?")) return;
+
+  extra = "";
+  try {
+    localStorage.removeItem("pilot-extra");
+  } catch(e) {}
+
+  $("#stat").textContent = "No custom training saved";
+  $("#dlg").close();
+};
+
+$("#clear").onclick = () => {
+  if (!confirm("Delete all saved chats?")) return;
+  chats = [];
+  cur = null;
+  save();
+  view();
+};
+
+$("#stat").textContent = extra
+  ? extra.length.toLocaleString() + " training characters saved"
+  : "No custom training saved";
+
+view();
 </script>
 </body>
 </html>
